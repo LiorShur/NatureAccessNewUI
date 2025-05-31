@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌍 Route Explorer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }
+  h1 { color: #4CAF50; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+  th { background-color: #4CAF50; color: white; }
+  tr:hover { background-color: #f1f1f1; }
+  a.button {
+    background: #2196F3; color: white; padding: 8px 14px;
+    border-radius: 4px; text-decoration: none;
+    display: inline-block;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>📍 Your Route Explorer</h1>
+
+<table id="routesTable">
+<thead>
+<tr><th>Route Name</th><th>Distance</th><th>Time</th><th>Date</th><th>View</th></tr>
+</thead>
+<tbody>
+<!-- Will be filled dynamically -->
+</tbody>
+</table>
+
+<script>
+// Dummy example data now - we'll automate later
+const routes = [
+  { name: "Morning Walk", distance: "4.2", time: "01:15:30", date: "2025-04-25", folder: "morning-walk" },
+  { name: "Teenim Adventure", distance: "2.8", time: "00:47:12", date: "2025-04-24", folder: "teenim-adventure" }
+];
+
+// Dynamically create table rows
+const tbody = document.getElementById('routesTable').querySelector('tbody');
+routes.forEach(route => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${route.name}</td>
+    <td>${route.distance} km</td>
+    <td>${route.time}</td>
+    <td>${route.date}</td>
+    <td><a class="button" href="routes/${route.folder}/index.html" target="_blank">View Map</a></td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+
+</body>
+</html>

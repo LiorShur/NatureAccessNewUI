@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv='cache-control' content='no-cache'> 
+  <meta http-equiv='expires' content='0'> 
+  <meta http-equiv='pragma' content='no-cache'>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Access Nature</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header id="header">
+    <h1>🌿 Access Nature 🌿</h1>
+  </header>
+<!-- <div id="localStorageStatus" class="storage-monitor">
+  <div class="header" id="storageHeader">📦 localStorage Monitor ▼</div>
+  <div class="content" id="storageContent">
+    <p>Checking usage...</p>
+  </div>
+</div> -->
+
+  <div id="map"></div>
+<!--   <div id="liveStats">
+  <div>Time: <span id="liveTimer">00:00:00</span></div>
+  <div>Distance: <span id="liveDistance">0.00 km</span></div>
+  </div> -->
+
+  <div id="controls">
+    <div class="stats-row">
+      ⏱ <span id="timer">00:00:00</span> |
+      📏 <span id="distance">0.00 km</span>
+    </div>
+
+    <div class="button-row green">
+      <button id="startBtn" class="control-button" onclick="startTracking()">▶️ Start</button>
+      <button id="pauseBtn" onclick="togglePause()"><span id="pauseButtonLabel">⏸ Pause</span></button>
+      <button id="stopBtn" onclick="stopTracking()">⏹ Stop</button>
+    </div>
+    
+<!--<div class="button-row purple">
+    <button onclick="exportAllRoutes()">🌍 Export All Routes & Explorer</button>
+    </div> -->
+    <div class="button-row blue">
+    <button onclick="addTextNote()">📝 Note</button>
+    <button id="takePhotoBtn" onclick="capturePhoto()">📸 Photo</button>
+<!--<button onclick="startAudioRecording()">🎤 Audio</button>
+    <button onclick="captureVideo()">🎥 Video</button> -->
+    </div>
+    <div class="button-row orange">
+      <button onclick="openAccessibilityForm()">♿ Edit Accessibility Info</button>
+    </div>
+    <div class="button-row blue">
+      <button onclick="showRouteDataOnMap()">📍 Show Map Notes</button>
+    </div>
+    <div class="button-row green">
+      <button id="resetBtn" onclick="confirmAndResetApp()">📍**!Reset App!**📍</button>
+    </div>
+    <div class="button-row orange">
+<!--     <button onclick="exportRouteSummary()">📦 Export Route Summary</button>
+    <button id="exportSummaryBtn" onclick="exportRouteSummary()" disabled>📦 Export Route Summary</button> -->
+    <button id="prepareAndExportBtn" onclick="prepareAndExport()">📦 Export Last Route</button>
+    <button id="exportAllRoutesBtn" onclick="exportAllRoutes()">🌍 Export All Routes</button>
+</div>
+
+<!--     <button onclick="window.open('explorer.html')">Routes Explorer Page</button>
+    </div> -->
+    
+<!--     <div class="button-row orange">
+      <button onclick="saveSession()">💾 Save</button>
+      <button onclick="generateShareableLink()">🔗 Share</button>
+    </div>
+ -->
+    <div class="button-row gray">
+      <button id="exportDataBtn" onclick="exportData()">📄 JSON</button>
+      <button id="exportPDFBtn" onclick="exportPDF()">📄 PDF</button>
+      <button id="exportGPXBtn" onclick="exportGPX()">📍 GPX</button>
+    </div> 
+<!--     <div class="button-row"> -->
+<!--   <button onclick="openHistory()">View Past Routes</button>
+</div> -->
+
+<!--   <div id="archivePanel" class="button-row" style="display: none;"></div> -->
+<div class="button-row orange">
+<!--     <button onclick="toggleArchivePanel()">📜 Browse Summaries</button> -->
+  <button id="toggleArchivePanelBtn" onclick="toggleArchivePanel()">📜 Browse Summaries <span id="archiveArrow">▼</span></button>
+  <button id="clearArchiveBtnBtn" onclick="SummaryArchive.clearAll()">🗑️ Clear All Summaries</button>
+</div>
+<div id="archivePanel" class="toggle-panel"></div>  
+<div id="historyPanel" style="display:none;">
+  <h3>Past Sessions</h3>
+  <ul id="historyList"></ul>
+  <button id="closeHistoryBtn" onclick="closeHistory()">Close</button>
+</div>
+    <div class="button-row green">
+  <button id="clearAllSessionsBtn" onclick="clearAllSessions()">🗑️ Clear All Saved Routes</button>
+</div>
+    
+<div class="button-row green">
+  <button onclick="toggleDarkMode()">🌙☀️ Dark/Light Mode</button>
+</div>
+ <div class="button-row purple">   
+<button id="clearAllAppDataBtn" onclick="clearAllAppData()">🧹 Clear Everything</button>
+ </div>   
+<input type="file" id="importFile" accept=".json,.gpx" style="display: none" />
+<div class="button-row green">
+<button onclick="triggerImport()">📥 Import Route (JSON/GPX)</button>
+</div>
+<div class="button-row green">
+<button onclick="showPhotoCleanupDialog()">📥 Handle photos</button>
+</div>
+
+   
+    <div class="sessions">
+      <h3>📂 Saved Routes</h3>
+      <ul id="savedSessionsList"></ul>
+    </div>
+  </div>
+  <div id="accessibilityOverlay" style="display:none;">
+  <div id="accessibilityFormContainer">
+    <h2>🧭 Accessibility Questionnaire</h2>
+    <form id="accessibilityForm">
+      <button type="button" onclick="closeAccessibilityForm()">🚪 סגור</button>
+
+      <label>חניות נכים – כמה:</label>
+      <input type="number" name="disabledParkingCount" required>
+      <label>תמונה:</label>
+      <input type="file" name="disabledParkingImage" accept="image/*"><br><br>
+
+      <label>תיאור הדרך:</label>
+      <select name="pathType" required>
+        <option value="">בחר</option>
+        <option>אספלט</option>
+        <option>בטון</option>
+        <option>דק עץ</option>
+        <option>שביל כורכר (לא נגיש)</option>
+      </select>
+      <label>תמונה:</label>
+      <input type="file" name="pathImage" accept="image/*"><br><br>
+
+      <label>אורך הדרך הנגישה (במטרים):</label>
+      <input type="number" name="accessibleLength" required>
+
+      <label>סוג המסלול:</label>
+      <select name="routeType">
+        <option>הלוך חזור</option>
+        <option>מעגלי</option>
+      </select>
+
+      <label>שיפוע השביל:</label>
+      <select name="slope">
+        <option>אופקי</option>
+        <option>שיפועים מתונים</option>
+        <option>שיפועים תלולים (לא נגיש)</option>
+      </select>
+
+      <label>נקודות עניין לאורך הדרך:</label>
+      <textarea name="pointsOfInterest"></textarea>
+      <label>תמונה:</label>
+      <input type="file" name="poiImage" accept="image/*"><br><br>
+
+      <label>תצפיות:</label>
+      <input type="checkbox" name="lookouts"> יש
+      <label>תמונה:</label>
+      <input type="file" name="lookoutImage" accept="image/*"><br><br>
+
+      <label>פינות פיקניק נגישות:</label>
+      <input type="checkbox" name="picnicSpots"> יש
+      <label>תמונה:</label>
+      <input type="file" name="picnicImage" accept="image/*"><br><br>
+
+      <label>שירותי נכים:</label>
+      <input type="checkbox" name="accessibleToilets"> יש
+      <label>תמונה:</label>
+      <input type="file" name="toiletImage" accept="image/*"><br><br>
+
+      <label>ספסלים לאורך הדרך:</label>
+      <input type="checkbox" name="benches"> יש
+      <label>תמונה:</label>
+      <input type="file" name="benchImage" accept="image/*"><br><br>
+
+      <label>הצללה:</label>
+      <select name="shade">
+        <option>מוצל</option>
+        <option>מוצל חלקית</option>
+        <option>לא מוצל</option>
+      </select><br><br>
+
+      <button type="submit">✔️ שמור</button>
+      <button type="button" onclick="closeAccessibilityForm()">❌ ביטול</button>
+    </form>
+  </div>
+</div>
+
+<canvas id="elevationChart" style="width: 100%; max-width: 800px; height: 200px;"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function plotElevationChart(routeData) {
+  const labels = [];
+  const elevations = [];
+
+  let totalDistance = 0;
+
+  for (let i = 1; i < routeData.length; i++) {
+    const prev = routeData[i - 1];
+    const curr = routeData[i];
+
+    if (prev.type === "location" && curr.type === "location") {
+      const d = haversineDistance(prev.coords, curr.coords);
+      totalDistance += d;
+      labels.push(totalDistance.toFixed(2));
+      elevations.push(curr.elevation || 0);
+    }
+  }
+
+  new Chart(document.getElementById("elevationChart"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "Elevation (m)",
+        data: elevations,
+        borderWidth: 2,
+        fill: true
+      }]
+    },
+    options: {
+      scales: {
+        x: { title: { display: true, text: "Distance (km)" }},
+        y: { title: { display: true, text: "Elevation (m)" }}
+      }
+    }
+  });
+}
+</script>
+
+
+  <input type="file" accept="image/*" capture="environment" id="photoInput" style="display: none" />
+  <input type="file" accept="video/*" capture id="videoInput" style="display: none" />
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!--   <script
+    async 
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4IoUFBPNGtVySKpFoqE9VITvGV7nkLHw&callback=initMap"
+    ></script> -->
+  <!-- ✅ New: Leaflet.js -->
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!--   <div id="localStorageStatus">📦 Checking localStorage...</div> -->
+<!--   <script type="module" src="localStorageMonitor.js"></script> -->
+
+  <script src="app.js"></script>
+</body>
+</html>

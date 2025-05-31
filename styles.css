@@ -1,0 +1,432 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f2f2f2;
+  overflow-x: visible !important;
+}
+
+#header {
+  background: linear-gradient(135deg, #4caf50, #81c784);
+  color: #fff;
+  padding: 0px;
+  text-align: center;
+  font-size: 1em;
+/*   font-weight: bold; */
+}
+
+#map {
+  width: 100%;
+  height: 40vh;
+}
+
+.stats-row {
+  background: #fff;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* .button-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+ */
+.button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap; /* ✅ No wrapping even if narrow */
+  margin: 2px 0;
+  padding: 2px;
+  border-radius: 8px;
+  overflow-x: auto; /* ✅ allow horizontal scroll if absolutely necessary */
+/*   background-color: #fbe9e7; */
+}
+
+/* .button-row:nth-child(1) { background-color: #e3f2fd; } /* Light Blue */
+/* .button-row:nth-child(2) { background-color: #fff3e0; } /* Light Orange */ */
+/* .button-row:nth-child(3) { background-color: #e8f5e9; } /* Light Green */ */
+/* .button-row:nth-child(4) { background-color: #fce4ec; } /* Light Pink */ */
+/* .button-row:nth-child(5) { background-color: #f3e5f5; } /* Light Purple */ */
+/* .button-row:nth-child(6) { background-color: #fbe9e7; } /* Light Coral */ */
+
+.button-row button {
+  flex: 1 1 auto; /* ✅ Let buttons shrink a bit if needed */
+  min-width: 80px; /* ✅ Minimum width for touch comfort */
+  margin: 6px;
+  padding: 5px 5px;
+  font-size: 16px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* .button-row button:hover {
+  background-color: #45a049;
+} */
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  margin: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  background-color: #ccc !important;
+  color: #888 !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745; /* normal green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.control-button:disabled {
+  background-color: #aaa;      /* gray background when disabled */
+  color: #eee;                 /* light text color */
+  cursor: not-allowed;         /* not-allowed cursor */
+  opacity: 0.7;                /* slightly faded look */
+}
+
+/* button:hover {
+  background-color: #45a049;
+}
+ */
+.green { background: #4caf50; }
+.green button { background: #388e3c; }
+
+.blue { background: #2196f3; }
+.blue button { background: #1976d2; }
+
+.purple { background: #9c27b0; }
+.purple button { background: #7b1fa2; }
+
+.orange { background: #ff9800; }
+.orange button { background: #f57c00; }
+
+.gray { background: #607d8b; }
+.gray button { background: #455a64; }
+
+.sessions h3 {
+  font-size: 1.1em;
+  margin-bottom: 6px;
+}
+
+#savedSessionsList {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+#savedSessionsList li {
+  background: #e6f3ff;
+  margin: 4px 0;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#savedSessionsList li button {
+  background-color: #2196f3;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+#liveStats {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 150, 136, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 9999;
+}
+#historyPanel {
+  position: fixed;
+  top: 20%;
+  left: 10%;
+  right: 10%;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+  z-index: 9999;
+  max-height: 60%;
+  overflow-y: auto;
+}
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .button-row {
+  background-color: #1f1f1f;
+}
+
+body.dark-mode button {
+  background-color: #333;
+  color: white;
+}
+body.dark-mode #historyPanel {
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+}
+
+body.dark-mode #liveStats {
+  background-color: rgba(200, 200, 200, 0.2);
+  color: #e0e0e0;
+}
+
+body.dark-mode #historyList li {
+  color: #e0e0e0;
+}
+
+.dropdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap; /* ✅ No wrapping even if narrow */
+  position: relative;
+/*   display: inline-block; */
+  margin: 2px 0px;
+}
+
+.dropbtn {
+  flex: 1 1 auto; /* ✅ Let buttons shrink a bit if needed */
+  min-width: 80px; /* ✅ Minimum width for touch comfort */
+background-color: #2196F3;
+  color: white;
+  padding: 5px 5px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 6px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 220px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 14px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.toggle-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  margin-top: 5px; /* ensures space below button */
+}
+
+.toggle-panel.open {
+  max-height: 500px; /* or auto with care */
+}
+.fade-out {
+  opacity: 1;
+  transition: opacity 0.5s ease-out;
+}
+.fade-out.remove {
+  opacity: 0;
+}
+
+.custom-icon {
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-icon svg {
+  pointer-events: none;
+}
+.leaflet-tooltip {
+  font-size: 12px;
+}
+
+#accessibilityOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#accessibilityFormContainer {
+  direction: rtl;
+  text-align: right;
+  background: #fff;
+  padding: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #333;
+}
+
+
+#accessibilityForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#accessibilityForm label {
+  display: block;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+#accessibilityForm input,
+#accessibilityForm select,
+#accessibilityForm textarea {
+  width: 100%;
+  margin-top: 2px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+#accessibilityForm input[type="file"] {
+  margin-top: 5px;
+}
+
+#accessibilityForm button {
+  margin-top: 20px;
+  padding: 10px 16px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#accessibilityForm button:hover {
+  background-color: #45a049;
+}
+
+#accessibilityForm button {
+  margin-top: 20px;
+}
+
+.storage-monitor {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  max-width: 95vw;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 10px;
+  border-radius: 6px;
+  z-index: 9999;
+  line-height: 1.5;
+  overflow-x: auto;
+  box-sizing: border-box;
+}
+
+.storage-monitor .header {
+  padding: 6px 10px;
+  background: #444;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+}
+
+.storage-monitor .content {
+  padding: 8px 10px;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .button-row button {
+    flex: 1 1 100%;
+  }
+  #map {
+    height: 50vh;
+  }
+}
+/* Optional: if really super narrow screen, allow scroll */
+@media (max-width: 320px) {
+  .button-row {
+    overflow-x: scroll;
+  }
+}
+@media (max-width: 600px) {
+  .storage-monitor {
+    top: 10px;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    font-size: 13px;
+    max-width: 90vw;
+    width: auto;
+    padding: 10px 14px;
+  }
+}
+@media (max-width: 420px) {
+  .storage-monitor {
+    font-size: 11px;
+    padding: 8px;
+  }
+}
