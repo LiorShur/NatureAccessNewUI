@@ -775,7 +775,7 @@ window.saveSession = function () {
 // === LOAD SESSION LIST ===
 window.loadSavedSessions = function () {
   const list = document.getElementById("savedSessionsList");
-  list.innerHTML = "";
+  //list.innerHTML = "";
   const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
 
   sessions.forEach((session, index) => {
@@ -2782,9 +2782,9 @@ window.triggerImport = () => {
 };
 
 //  Import Routes
-document.getElementById("importFile").addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+// document.getElementById("importFile").addEventListener("change", async (e) => {
+//   const file = e.target.files[0];
+//   if (!file) return;
 
   const ext = file.name.split(".").pop().toLowerCase();
   if (ext !== "json") {
