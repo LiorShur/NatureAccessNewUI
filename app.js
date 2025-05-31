@@ -2786,42 +2786,42 @@ window.triggerImport = () => {
 //   const file = e.target.files[0];
 //   if (!file) return;
 
-  const ext = file.name.split(".").pop().toLowerCase();
-  if (ext !== "json") {
-    alert("Only JSON import is supported currently.");
-    return;
-  }
+//   const ext = file.name.split(".").pop().toLowerCase();
+//   if (ext !== "json") {
+//     alert("Only JSON import is supported currently.");
+//     return;
+//   }
 
-  try {
-    const text = await file.text();
-    const data = JSON.parse(text);
-    if (!Array.isArray(data)) throw new Error("Invalid JSON structure");
+//   try {
+//     const text = await file.text();
+//     const data = JSON.parse(text);
+//     if (!Array.isArray(data)) throw new Error("Invalid JSON structure");
 
-    routeData = data;
-    path = data.filter(e => e.type === "location").map(e => e.coords);
+//     routeData = data;
+//     path = data.filter(e => e.type === "location").map(e => e.coords);
 
-    for (const entry of routeData) {
-      if (entry.type === "location" && entry.elevation == null) {
-        entry.elevation = await getElevation(entry.coords.lat, entry.coords.lng);
-      }
-    }
+//     for (const entry of routeData) {
+//       if (entry.type === "location" && entry.elevation == null) {
+//         entry.elevation = await getElevation(entry.coords.lat, entry.coords.lng);
+//       }
+//     }
 
-    // Save imported session for re-export
-    const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
-    sessions.push({ name: "Imported Route", data: routeData });
-    localStorage.setItem("sessions", JSON.stringify(sessions));
+//     // Save imported session for re-export
+//     const sessions = JSON.parse(localStorage.getItem("sessions") || "[]");
+//     sessions.push({ name: "Imported Route", data: routeData });
+//     localStorage.setItem("sessions", JSON.stringify(sessions));
 
-    initMap(() => {
-      drawSavedRoutePath();
-      showRouteDataOnMap();
-      alert("✅ Route JSON imported and displayed.");
-    });
+//     initMap(() => {
+//       drawSavedRoutePath();
+//       showRouteDataOnMap();
+//       alert("✅ Route JSON imported and displayed.");
+//     });
 
-  } catch (err) {
-    console.error("❌ Failed to import route:", err);
-    alert("⚠️ Failed to import route. Invalid format or corrupted data.");
-  }
-});
+//   } catch (err) {
+//     console.error("❌ Failed to import route:", err);
+//     alert("⚠️ Failed to import route. Invalid format or corrupted data.");
+//   }
+// });
 
 
 //   } else if (ext === "gpx") {
